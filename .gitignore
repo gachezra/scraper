@@ -1,0 +1,9 @@
+# packages
+/node_modules
+
+# environs
+.env
+
+# misc
+tables.txt
+tables.json
