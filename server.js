@@ -16,22 +16,22 @@ const selectedIds = [13, 14, 15];
 
 app.use(express.json());
 
-const askConfirmation = async (eventData) => {
-  return new Promise((resolve) => {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+// const askConfirmation = async (eventData) => {
+//   return new Promise((resolve) => {
+//     const rl = readline.createInterface({
+//       input: process.stdin,
+//       output: process.stdout,
+//     });
 
-    console.log("\n🔍 Scraped Event Data Preview:");
-    console.log(JSON.stringify(eventData, null, 2).slice(0, 1000) + "...\n"); 
+//     console.log("\n🔍 Scraped Event Data Preview:");
+//     console.log(JSON.stringify(eventData, null, 2).slice(0, 1000) + "...\n"); 
 
-    rl.question("🚀 Do you want to post the events? (y/n): ", (answer) => {
-      rl.close();
-      resolve(answer.toLowerCase() === "y");
-    });
-  });
-};
+//     rl.question("🚀 Do you want to post the events? (y/n): ", (answer) => {
+//       rl.close();
+//       resolve(answer.toLowerCase() === "y");
+//     });
+//   });
+// };
 
 const initializeApp = async () => {
   try {
@@ -39,14 +39,16 @@ const initializeApp = async () => {
     const eventData = await Scrape(url, outputPath, selectedIds);
     console.log("✅ Scraping complete!");
 
-    const confirm = await askConfirmation(eventData);
-    if (confirm) {
-      console.log("\n🚀 Posting events to database...");
-      // await postEvents(eventData);
-      console.log("✅ Events successfully posted!");
-    } else {
-      console.log("❌ Posting canceled by user.");
-    }
+    // const confirm = await askConfirmation(eventData);
+    // if (confirm) {
+    //   console.log("\n🚀 Posting events to database...");
+    // } else {
+    //   console.log("❌ Posting canceled by user.");
+    // }
+    console.log("\n🔍 Scraped Event Data Preview:");
+    console.log(JSON.stringify(eventData, null, 2).slice(0, 1000) + "...\n"); 
+    await postEvents(eventData);
+    console.log("✅ Events successfully posted!");
   } catch (error) {
     console.error("❌ Error during event processing:", error);
   }
@@ -59,17 +61,14 @@ const connectDB = async () => {
     });
 
     mongoose.set("strictQuery", true);
-    console.log(uri)
     mongoose.connect(uri)
-    .then(() => {
-    console.log("DB Connected Successfully...");
+    .then(async () => {
+      await initializeApp()
+      console.log("DB Connected Successfully...")
     })
     .catch((err) => {
     console.log(err.message);
     });
-
-    await initializeApp();
-
 
   } catch (error) {
     console.error("❌ MongoDB Connection Error:", error.stack);
