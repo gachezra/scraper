@@ -12,7 +12,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 
 const url = "http://whats-on-mombasa.com";
 const outputPath = "tables.txt";
-const selectedIds = [13, 14, 15];
+const selectedIds = [14, 15];
 
 app.use(express.json());
 
